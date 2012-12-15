@@ -1,0 +1,16 @@
+{
+    "name": "cmsx/html",
+    "version" : "1.0.0",
+    "type": "library",
+    "description": "CMSx HTML component",
+    "homepage": "http://cmsx.ru",
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "autoload":{
+        "psr-0":{
+            "CMSx":"src"
+        }
+    },
+    "minimum-stability": "dev"
+}
