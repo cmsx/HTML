@@ -160,7 +160,7 @@ abstract class HTML
   /**
    * Список OPTION`ов
    */
-  public static function OptionListing($arr, $selected, $optgroup = null, $onlyvalues = false)
+  public static function OptionListing($arr, $selected = null, $optgroup = null, $onlyvalues = false)
   {
     $tmp = '';
     if (!is_array($selected)) {

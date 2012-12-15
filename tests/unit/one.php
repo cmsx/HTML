@@ -57,7 +57,7 @@ class HTMLTest extends \PHPUnit_Framework_TestCase
     $this->assertSelectCount('input[value=123]', true, $c, 'Значение');
     $this->assertSelectCount('input[class=myclass]', true, $c, 'Класс');
 
-    echo $c = HTML::Checkbox('hello', null, null, null, 'Привет');
+    $c = HTML::Checkbox('hello', null, null, null, 'Привет');
     $this->assertSelectCount('label input', true, $c, 'Чекбокс завернутый в лейбл');
     $this->assertTrue(strpos($c, 'Привет') > 0, 'Текст лейбла');
   }
@@ -137,6 +137,21 @@ class HTMLTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals('<option value="hi" selected="selected">Hello</option>', $o, 'Выбранный пункт');
   }
 
+  function testOptionListing()
+  {
+    $arr = array('one', 'two');
+    $ol = HTML::OptionListing($arr, 'two', null, true);
+    $exp = '<option value="one">one</option>'."\n".'<option value="two" selected="selected">two</option>'."\n";
+    $this->assertEquals($exp, $ol, 'Список по значениям');
+
+    $arr = array(1=>'one', 2=>'two');
+    $ol = HTML::OptionListing($arr, 2, 'choose');
+    $this->assertSelectCount('optgroup[label=choose] option', 2, $ol, 'OPTGROUP с 2 опциями');
+    $this->assertSelectCount('option[value=1]', true, $ol, 'Опции по ключ-значению 1');
+    $this->assertSelectCount('option[value=2]', true, $ol, 'Опции по ключ-значению 2');
+    $this->assertGreaterThan(0, strpos($ol, '<option value="2" selected="selected">two</option>'), 'Выделен пункт №2');
+  }
+
   function testPassword()
   {
     $i = HTML::Password('hello', 123);
@@ -161,7 +176,7 @@ class HTMLTest extends \PHPUnit_Framework_TestCase
     $this->assertSelectCount('input[value=123]', true, $c, 'Значение');
     $this->assertSelectCount('input[class=myclass]', true, $c, 'Класс');
 
-    echo $c = HTML::Radio('hello', null, null, null, 'Привет');
+    $c = HTML::Radio('hello', null, null, null, 'Привет');
     $this->assertSelectCount('label input', true, $c, 'Радиобатон завернутый в лейбл');
     $this->assertTrue(strpos($c, 'Привет') > 0, 'Текст лейбла');
   }
