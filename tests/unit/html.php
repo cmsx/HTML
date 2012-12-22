@@ -6,6 +6,20 @@ use \CMSx\HTML;
 
 class HTMLTest extends \PHPUnit_Framework_TestCase
 {
+  function testAttrConvert()
+  {
+    $exp = array('class' => 'test');
+    $this->assertEquals($exp, HTML::AttrConvert('test'), 'Если передан не массив - он становится классом');
+
+    $arr1 = array('two' => 2, 'one' => 1);
+    $exp = array('one' => 1, 'two' => 2);
+    $this->assertEquals($exp, HTML::AttrConvert($arr1), 'Атрибуты сортируются по алфавиту');
+
+    $arr2 = array('three' => 3);
+    $exp = array('class' => 'hello', 'one' => 1, 'two' => 2, 'three' => 3);
+    $this->assertEquals($exp, HTML::AttrConvert($arr1, 'hello', $arr2), 'Объединение нескольких групп атрибутов');
+  }
+
   /**
    * @dataProvider tags
    */
@@ -134,14 +148,14 @@ class HTMLTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals('<option value="hi">Hello</option>', $o, 'Значение и название');
 
     $o = HTML::Option('hi', 'Hello', true);
-    $this->assertEquals('<option value="hi" selected="selected">Hello</option>', $o, 'Выбранный пункт');
+    $this->assertEquals('<option selected="selected" value="hi">Hello</option>', $o, 'Выбранный пункт');
   }
 
   function testOptionListing()
   {
     $arr = array('one', 'two');
     $ol = HTML::OptionListing($arr, 'two', null, true);
-    $exp = '<option value="one">one</option>'."\n".'<option value="two" selected="selected">two</option>'."\n";
+    $exp = '<option value="one">one</option>'."\n".'<option selected="selected" value="two">two</option>'."\n";
     $this->assertEquals($exp, $ol, 'Список по значениям');
 
     $arr = array(1=>'one', 2=>'two');
@@ -149,7 +163,7 @@ class HTMLTest extends \PHPUnit_Framework_TestCase
     $this->assertSelectCount('optgroup[label=choose] option', 2, $ol, 'OPTGROUP с 2 опциями');
     $this->assertSelectCount('option[value=1]', true, $ol, 'Опции по ключ-значению 1');
     $this->assertSelectCount('option[value=2]', true, $ol, 'Опции по ключ-значению 2');
-    $this->assertGreaterThan(0, strpos($ol, '<option value="2" selected="selected">two</option>'), 'Выделен пункт №2');
+    $this->assertGreaterThan(0, strpos($ol, '<option selected="selected" value="2">two</option>'), 'Выделен пункт №2');
   }
 
   function testPassword()
@@ -200,7 +214,7 @@ class HTMLTest extends \PHPUnit_Framework_TestCase
     $this->assertGreaterThan(0, strpos($s, '<option value="">Выбор</option>'), 'Заголовок');
     $this->assertGreaterThan(0, strpos($s, '<option value="1">Привет</option>'), 'Первый пункт не выбран');
     $this->assertGreaterThan(
-      0, strpos($s, '<option value="2" selected="selected">Пока</option>'), 'Второй пункт выбран'
+      0, strpos($s, '<option selected="selected" value="2">Пока</option>'), 'Второй пункт выбран'
     );
   }
 

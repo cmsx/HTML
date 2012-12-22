@@ -299,15 +299,28 @@ abstract class HTML
 
   /**
    * Приведение атрибутов тега к одному виду
+   * Если передана строка - она преобразуется в атрибут class
+   * Можно передать несколько атрибутов - они будут сведены в один массив
+   *
+   * @return array
    */
-  private static function AttrConvert($attr)
+  public static function AttrConvert($attr, $_ = null)
   {
-    if (is_null($attr)) {
+    $args = func_get_args();
+    if (count($args) > 1) {
       $attr = array();
-    } elseif (!is_array($attr)) {
-      $attr = array('class' => $attr);
+      foreach ($args as $a) {
+        $attr = array_merge($attr, self::AttrConvert($a));
+      }
+    } else {
+      if (is_null($attr)) {
+        $attr = array();
+      } elseif (!is_array($attr)) {
+        $attr = array('class' => (string)$attr);
+      }
     }
 
+    ksort($attr);
     return $attr;
   }
 }
