@@ -219,11 +219,15 @@ abstract class HTML
   /**
    * Список радиобатонов
    * $separate - как разделять чекбоксы: false - ничем, true - <br>, или своё
+   * $onlyvalues - игнорировать ключи массива
    */
-  public static function RadioListing($arr, $name, $selected = null, $separate = null)
+  public static function RadioListing($arr, $name, $selected = null, $separate = null, $onlyvalues = false)
   {
     $tmp = '';
     foreach ($arr as $val => $title) {
+      if ($onlyvalues) {
+        $val = $title;
+      }
       $ch = !is_null($selected) && $val == $selected;
       $tmp .= self::Radio($name, $ch, $val, null, $title);
       if ($separate) {

@@ -1,6 +1,6 @@
 {
     "name": "cmsx/html",
-    "version" : "1.0.3",
+    "version" : "1.0.4",
     "type": "library",
     "description": "CMSx HTML component",
     "homepage": "http://cmsx.ru",

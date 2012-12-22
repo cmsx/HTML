@@ -231,6 +231,12 @@ class HTMLTest extends \PHPUnit_Framework_TestCase
     $arr = array(0 => 'Нет', 1 => 'Да');
     $l   = HTML::RadioListing($arr, 'test');
     $this->assertSelectCount('input[checked=checked]', false, $l, 'Ни один радиобатон не выбран');
+
+    $arr = array('one', 'two');
+    echo $l = HTML::RadioListing($arr, 'test', 'two', null, true);
+    $this->assertSelectCount('input[value=one]', true, $l, 'Радиобатон с значением one');
+    $this->assertSelectCount('input[value=two]', true, $l, 'Радиобатон с значением two');
+    $this->assertSelectCount('input[checked=checked]', true, $l, 'Отмечен один чекбокс');
   }
 
   function testSelect()
