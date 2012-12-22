@@ -12,11 +12,11 @@ class HTMLTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals($exp, HTML::AttrConvert('test'), 'Если передан не массив - он становится классом');
 
     $arr1 = array('two' => 2, 'one' => 1);
-    $exp = array('one' => 1, 'two' => 2);
+    $exp  = array('one' => 1, 'two' => 2);
     $this->assertEquals($exp, HTML::AttrConvert($arr1), 'Атрибуты сортируются по алфавиту');
 
     $arr2 = array('three' => 3);
-    $exp = array('class' => 'hello', 'one' => 1, 'two' => 2, 'three' => 3);
+    $exp  = array('class' => 'hello', 'one' => 1, 'two' => 2, 'three' => 3);
     $this->assertEquals($exp, HTML::AttrConvert($arr1, 'hello', $arr2), 'Объединение нескольких групп атрибутов');
   }
 
@@ -79,10 +79,21 @@ class HTMLTest extends \PHPUnit_Framework_TestCase
   function testCheckboxListing()
   {
     $arr = array(1 => 'one', 2 => 'two');
-    $l = HTML::CheckboxListing($arr, 'myname', 2);
+    $l   = HTML::CheckboxListing($arr, 'myname', 2);
     $this->assertSelectCount('label input[type=checkbox]', 2, $l, '2 чекбокса');
     $this->assertSelectCount('label input[name~=myname]', 2, $l, '2 чексбокса с именем');
     $this->assertSelectCount('label input[checked=checked]', true, $l, '1 чексбокс отмечен');
+
+    $arr = array(0 => '<b>Нет</b>', 1 => 'Да');
+    $l   = HTML::CheckboxListing($arr, 'test', null);
+    $this->assertSelectCount('input[checked=checked]', false, $l, 'Ни один чекбокс не выбран');
+
+    $s = '<input checked="checked" name="test[]" type="checkbox" value="0" />';
+    $l = HTML::CheckboxListing($arr, 'test', 0);
+    $this->assertGreaterThan(0, strpos($l, $s), 'Выбран чекбокс Нет');
+
+    $l = HTML::CheckboxListing($arr, 'test', array(1, 0));
+    $this->assertSelectCount('input[checked=checked]', 2, $l, 'Выбраны оба чекбокса');
   }
 
   function testForm()
@@ -154,16 +165,24 @@ class HTMLTest extends \PHPUnit_Framework_TestCase
   function testOptionListing()
   {
     $arr = array('one', 'two');
-    $ol = HTML::OptionListing($arr, 'two', null, true);
-    $exp = '<option value="one">one</option>'."\n".'<option selected="selected" value="two">two</option>'."\n";
+    $ol  = HTML::OptionListing($arr, 'two', null, true);
+    $exp = '<option value="one">one</option>' . "\n" . '<option selected="selected" value="two">two</option>' . "\n";
     $this->assertEquals($exp, $ol, 'Список по значениям');
 
-    $arr = array(1=>'one', 2=>'two');
-    $ol = HTML::OptionListing($arr, 2, 'choose');
+    $arr = array(1 => 'one', 2 => 'two');
+    $ol  = HTML::OptionListing($arr, 2, 'choose');
     $this->assertSelectCount('optgroup[label=choose] option', 2, $ol, 'OPTGROUP с 2 опциями');
     $this->assertSelectCount('option[value=1]', true, $ol, 'Опции по ключ-значению 1');
     $this->assertSelectCount('option[value=2]', true, $ol, 'Опции по ключ-значению 2');
     $this->assertGreaterThan(0, strpos($ol, '<option selected="selected" value="2">two</option>'), 'Выделен пункт №2');
+
+    $arr = array(0 => 'Нет', 1 => 'Да');
+
+    $ol = HTML::OptionListing($arr, null);
+    $this->assertSelectCount('option[selected=selected]', false, $ol, 'Никакой пункт не выбран');
+
+    $ol = HTML::OptionListing($arr, 0);
+    $this->assertSelectCount('option[selected=selected]', true, $ol, 'Выбран пункт Нет');
   }
 
   function testPassword()
@@ -198,10 +217,14 @@ class HTMLTest extends \PHPUnit_Framework_TestCase
   function testRadioListing()
   {
     $arr = array(1 => 'one', 2 => 'two');
-    $l = HTML::RadioListing($arr, 'myname', 2);
+    $l   = HTML::RadioListing($arr, 'myname', 2);
     $this->assertSelectCount('label input[type=radio]', 2, $l, '2 радиобатона');
     $this->assertSelectCount('label input[name=myname]', 2, $l, '2 радиобатона с именем');
     $this->assertSelectCount('label input[checked=checked]', true, $l, '1 радиобатон отмечен');
+
+    $arr = array(0 => 'Нет', 1 => 'Да');
+    $l   = HTML::RadioListing($arr, 'test');
+    $this->assertSelectCount('input[checked=checked]', false, $l, 'Ни один радиобатон не выбран');
   }
 
   function testSelect()

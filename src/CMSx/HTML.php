@@ -66,11 +66,13 @@ abstract class HTML
   public static function CheckboxListing($arr, $name, $selected = null, $separate = null)
   {
     $tmp = '';
-    if (!is_array($selected)) {
-      $selected = array($selected);
+    $sel_arr = $selected;
+    if (!is_array($sel_arr)) {
+      $sel_arr = array($sel_arr);
     }
     foreach ($arr as $val => $title) {
-      $tmp .= self::Checkbox($name . '[]', in_array($val, $selected), $val, null, $title);
+//      $ch = is_null()$selected
+      $tmp .= self::Checkbox($name . '[]', in_array($val, $sel_arr, is_null($selected)), $val, null, $title);
       if ($separate) {
         $tmp .= $separate === true ? "<br />" : $separate;
       }
@@ -163,9 +165,6 @@ abstract class HTML
   public static function OptionListing($arr, $selected = null, $optgroup = null, $onlyvalues = false)
   {
     $tmp = '';
-    if (!is_array($selected)) {
-      $selected = array($selected);
-    }
     foreach ($arr as $key => $val) {
       if (is_array($val)) {
         $tmp .= self::OptionListing($val, $selected, $key);
@@ -173,7 +172,7 @@ abstract class HTML
         if ($onlyvalues) {
           $key = $val;
         }
-        $tmp .= self::Option($key, $val, in_array($key, $selected)) . "\n";
+        $tmp .= self::Option($key, $val, !is_null($selected) && $key == $selected) . "\n";
       }
     }
     if ($optgroup) {
@@ -221,11 +220,9 @@ abstract class HTML
   public static function RadioListing($arr, $name, $selected = null, $separate = null)
   {
     $tmp = '';
-    if (!is_array($selected)) {
-      $selected = array($selected);
-    }
     foreach ($arr as $val => $title) {
-      $tmp .= self::Radio($name, in_array($val, $selected), $val, null, $title);
+      $ch = !is_null($selected) && $val == $selected;
+      $tmp .= self::Radio($name, $ch, $val, null, $title);
       if ($separate) {
         $tmp .= $separate === true ? "<br />" : $separate;
       }
