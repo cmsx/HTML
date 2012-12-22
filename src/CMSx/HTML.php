@@ -62,8 +62,9 @@ abstract class HTML
   /**
    * Список радиобатонов
    * $separate - как разделять чекбоксы: false - ничем, true - <br>, или своё
+   * $onlyvalues - игнорировать ключи массива
    */
-  public static function CheckboxListing($arr, $name, $selected = null, $separate = null)
+  public static function CheckboxListing($arr, $name, $selected = null, $separate = null, $onlyvalues = false)
   {
     $tmp = '';
     $sel_arr = $selected;
@@ -71,7 +72,9 @@ abstract class HTML
       $sel_arr = array($sel_arr);
     }
     foreach ($arr as $val => $title) {
-//      $ch = is_null()$selected
+      if ($onlyvalues) {
+        $val = $title;
+      }
       $tmp .= self::Checkbox($name . '[]', in_array($val, $sel_arr, is_null($selected)), $val, null, $title);
       if ($separate) {
         $tmp .= $separate === true ? "<br />" : $separate;

@@ -94,6 +94,12 @@ class HTMLTest extends \PHPUnit_Framework_TestCase
 
     $l = HTML::CheckboxListing($arr, 'test', array(1, 0));
     $this->assertSelectCount('input[checked=checked]', 2, $l, 'Выбраны оба чекбокса');
+
+    $arr = array('one', 'two');
+    echo $l = HTML::CheckboxListing($arr, 'test', 'two', null, true);
+    $this->assertSelectCount('input[value=one]', true, $l, 'Чекбокс с значением one');
+    $this->assertSelectCount('input[value=two]', true, $l, 'Чекбокс с значением two');
+    $this->assertSelectCount('input[checked=checked]', true, $l, 'Отмечен один чекбокс');
   }
 
   function testForm()
